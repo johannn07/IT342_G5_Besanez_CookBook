@@ -85,7 +85,7 @@ class CollectionViewModel : ViewModel() {
         viewModelScope.launch {
             repo.createCollection(name.trim(), description?.trim()?.ifBlank { null })
                 .onSuccess { col ->
-                    _collections.value = listOf(col) + (_collections.value ?: emptyList())
+                    _collections.value = (_collections.value ?: emptyList()) + listOf(col)
                     _event.value = Event.Created
                     _error.value = null
                 }

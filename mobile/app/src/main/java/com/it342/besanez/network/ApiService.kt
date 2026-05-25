@@ -24,7 +24,6 @@ interface ApiService {
     @POST("api/auth/forgot-password")
     suspend fun forgotPassword(@Body request: ForgotPasswordRequest): Response<BaseResponse>
 
-    // Mobile Google login — sends idToken to backend, backend verifies and returns JWT
     @POST("api/auth/google/mobile")
     suspend fun loginWithGoogle(@Body request: GoogleLoginRequest): Response<AuthResponse>
 
@@ -62,7 +61,8 @@ interface ApiService {
         @Query("search") search: String? = null,
         @Query("collection") collectionId: Long? = null,
         @Query("page") page: Int = 0,
-        @Query("size") size: Int = 10
+        @Query("size") size: Int = 10,
+        @Query("sort") sort: String? = null
     ): Response<PageResponse<RecipeResponse>>
 
     @GET("api/recipe/public")
@@ -141,7 +141,8 @@ interface ApiService {
     suspend fun getCollections(
         @Query("search") search: String? = null,
         @Query("page") page: Int = 0,
-        @Query("size") size: Int = 10
+        @Query("size") size: Int = 10,
+        @Query("sort") sort: String? = null
     ): Response<PageResponse<CollectionResponse>>
 
     @GET("api/collection/{id}")

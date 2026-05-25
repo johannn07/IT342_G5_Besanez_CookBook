@@ -15,7 +15,12 @@ class CollectionRepository {
         page: Int = 0,
         size: Int = 50
     ): Result<PageResponse<CollectionResponse>> = runCatching {
-        val res = api.getCollections(search = search?.ifBlank { null }, page = page, size = size)
+        val res = api.getCollections(
+            search = search?.ifBlank { null },
+            page = page,
+            size = size,
+            sort = "createdAt,asc"
+        )
         if (res.isSuccessful) res.body()!!
         else error("Failed to load collections")
     }
@@ -49,7 +54,7 @@ class CollectionRepository {
     }
 
     suspend fun getRecipesByCollection(collectionId: Long): Result<List<RecipeResponse>> = runCatching {
-        val res = api.getRecipes(collectionId = collectionId, size = 200)
+        val res = api.getRecipes(collectionId = collectionId, size = 200, sort = "createdAt,asc")
         if (res.isSuccessful) res.body()!!.content
         else error("Failed to load recipes")
     }

@@ -17,7 +17,8 @@ class RecipeRepository {
             val response = api.getRecipes(
                 search = if (search.isNullOrBlank()) null else search,
                 page = page,
-                size = size
+                size = size,
+                sort = "createdAt,asc"
             )
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
