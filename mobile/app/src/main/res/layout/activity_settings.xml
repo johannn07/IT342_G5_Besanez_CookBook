@@ -13,7 +13,9 @@
         android:background="@color/warm_white"
         android:elevation="4dp"
         android:title="Settings"
-        app:titleTextColor="@color/text_dark" />
+        app:titleTextColor="@color/text_dark"
+        app:navigationIconTint="@color/text_dark"
+        app:theme="@style/ToolbarOverlay" />
 
     <ScrollView
         android:layout_width="match_parent"

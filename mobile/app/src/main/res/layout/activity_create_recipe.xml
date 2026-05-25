@@ -12,7 +12,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/warm_white"
         android:elevation="4dp"
-        app:titleTextColor="@color/text_dark" />
+        app:titleTextColor="@color/text_dark"
+        app:navigationIconTint="@color/text_dark"
+        app:theme="@style/ToolbarOverlay" />
 
     <ScrollView
         android:layout_width="match_parent"
