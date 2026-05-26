@@ -1,5 +1,6 @@
 package edu.cit.besanez.cookbook.recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.cit.besanez.cookbook.collection.CollectionEntity;
 import edu.cit.besanez.cookbook.shared.exception.ResourceNotFoundException;
 import edu.cit.besanez.cookbook.user.UserEntity;
 import edu.cit.besanez.cookbook.user.UserRepository;
@@ -108,11 +110,19 @@ public class RecipeService {
 
     @Transactional
     public void deleteRecipe(long userId, Long recipeId) {
-        if (!recipeRepository.existsByIdAndUserId(recipeId, userId)) {
-            throw new ResourceNotFoundException("Recipe not found with id: " + recipeId);
-        }
+        // Fetch the recipe along with its collections to avoid lazy loading issues
+        RecipeEntity recipe = recipeRepository.findByIdAndUserId(recipeId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + recipeId));
 
-        recipeRepository.deleteById(recipeId);
+        // Remove the recipe from all collections (this updates the join table)
+        for (CollectionEntity collection : new ArrayList<>(recipe.getCollections())) {
+            collection.getRecipes().remove(recipe);
+        }
+        recipe.getCollections().clear(); // optional, ensures the recipe’s side is empty
+
+        // Now it’s safe to delete the recipe (cascades will handle ingredients &
+        // instructions)
+        recipeRepository.delete(recipe);
     }
 
     // ─── Mapping ──────────────────────────────────────────────────────────────
