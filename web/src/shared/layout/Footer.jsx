@@ -30,7 +30,7 @@ const Footer = () => (
             <span className={styles.logoText}>CookBook</span>
         </div>
 
-        <span className={styles.copyright}>© 2025 CookBook. All rights reserved.</span>
+        <span className={styles.copyright}>© 2026 CookBook. All rights reserved.</span>
 
         <div className={styles.socials}>
             <a href="https://www.facebook.com/johntiklo6817/" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} title="Facebook">
