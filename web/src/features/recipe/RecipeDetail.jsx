@@ -12,6 +12,7 @@ import CookbookFacade from '../../shared/patterns/CookbookFacade';
 import { withErrorBoundary } from '../../shared/patterns/ComponentDecorators';
 import styles from './RecipeDetail.module.css';
 import LoadingScreen from '../../shared/components/LoadingScreen';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
 
 const RecipeDetail = () => {
     const { user } = useAuth();
@@ -24,6 +25,7 @@ const RecipeDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showAddToCollection, setShowAddToCollection] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -43,10 +45,12 @@ const RecipeDetail = () => {
         fetchAll();
     }, [id]);
 
-    const handleDelete = async () => {
-        if (!window.confirm('Delete this recipe? This cannot be undone.')) return;
+    const handleDelete = () => setShowDialog(true);
+
+    const confirmDelete = async () => {
         try {
             await CookbookFacade.deleteRecipe(id);
+            setShowDialog(false);
             navigate('/recipes');
         } catch {
             alert('Failed to delete recipe.');
@@ -270,6 +274,14 @@ const RecipeDetail = () => {
                     onSaved={() => setShowAddToCollection(false)}
                 />
             )}
+
+            <ConfirmDialog
+                isOpen={showDialog}
+                onClose={() => setShowDialog(false)}
+                onConfirm={confirmDelete}
+                title="Delete Recipe?"
+                message="Are you sure you want to delete this recipe? This action cannot be undone!"
+            />
         </>
     );
 };

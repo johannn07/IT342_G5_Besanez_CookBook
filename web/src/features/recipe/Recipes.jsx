@@ -7,6 +7,7 @@ import AddToCollectionModal from '../collection/components/AddToCollectionModal'
 import recipeAPI from './recipe';
 import styles from './Recipes.module.css';
 import LoadingScreen from '../../shared/components/LoadingScreen';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
 
 const BG_CLASSES = ['rc1', 'rc2', 'rc3', 'rc4', 'rc5', 'rc6'];
 const EMOJI_MAP = ['🥘', '🥗', '🍋', '🍝', '🍜', '🥧', '🍲', '🥩', '🍰', '🥞'];
@@ -25,6 +26,7 @@ const Recipes = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [addToCollectionRecipe, setAddToCollectionRecipe] = useState(null);
+    const [deleteTargetId, setDeleteTargetId] = useState(null);
 
     const fetchRecipes = useCallback(async () => {
         setLoading(true);
@@ -55,14 +57,20 @@ const Recipes = () => {
         setPage(0);
     }, [search, sortBy, filterPublic]);
 
-    const handleDelete = async (e, id) => {
+    const handleDelete = (e, id) => {
         e.stopPropagation();
-        if (!window.confirm('Delete this recipe? This cannot be undone.')) return;
+        setDeleteTargetId(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteTargetId) return;
         try {
-            await recipeAPI.deleteRecipe(id);
-            setRecipes(prev => prev.filter(r => r.id !== id));
+            await recipeAPI.deleteRecipe(deleteTargetId);
+            setRecipes(prev => prev.filter(r => r.id !== deleteTargetId));
         } catch {
             alert('Failed to delete recipe.');
+        } finally {
+            setDeleteTargetId(null);
         }
     };
 
@@ -243,6 +251,14 @@ const Recipes = () => {
                     onSaved={() => setAddToCollectionRecipe(null)}
                 />
             )}
+
+            <ConfirmDialog
+                isOpen={deleteTargetId !== null}
+                onClose={() => setDeleteTargetId(null)}
+                onConfirm={confirmDelete}
+                title="Delete Recipe?"
+                message="Are you sure you want to delete this recipe? This action cannot be undone!"
+            />
         </>
     );
 };
