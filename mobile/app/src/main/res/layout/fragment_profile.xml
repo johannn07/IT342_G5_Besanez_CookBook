@@ -26,6 +26,7 @@
             android:padding="24dp"
             android:gravity="center_horizontal">
 
+            <!-- Avatar -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivAvatar"
                 android:layout_width="96dp"
@@ -68,109 +69,289 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/border"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="20dp" />
 
-            <TextView
+            <!-- ── Section header row ── -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Edit Information"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:fontFamily="serif"
-                android:textColor="@color/text_dark"
-                android:layout_marginBottom="16dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="First Name"
-                style="@style/CookBook.TextInputLayout"
-                android:layout_marginBottom="14dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFirstName"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:layout_weight="1"
+                    android:text="Personal Information"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="serif"
                     android:textColor="@color/text_dark" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+                <ImageButton
+                    android:id="@+id/btnEditInfo"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:tint="@color/terracotta_dark"
+                    android:background="@color/peach_light"
+                    android:contentDescription="Edit" />
+
+            </LinearLayout>
+
+            <!-- ── Read-only display (default visible) ── -->
+            <LinearLayout
+                android:id="@+id/groupViewMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
-                style="@style/CookBook.TextInputLayout"
-                android:layout_marginBottom="14dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etLastName"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/text_dark" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                style="@style/CookBook.TextInputLayout"
-                android:layout_marginBottom="14dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmailEdit"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="First Name"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_mid"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:layout_marginBottom="3dp" />
+                        <TextView
+                            android:id="@+id/tvDisplayFirstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:background="@color/warm_white"
+                            android:padding="12dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last Name"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_mid"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:layout_marginBottom="3dp" />
+                        <TextView
+                            android:id="@+id/tvDisplayLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:background="@color/warm_white"
+                            android:padding="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/text_dark"
-                    android:focusable="false"
-                    android:alpha="0.6" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_mid"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="3dp" />
+                    <TextView
+                        android:id="@+id/tvDisplayEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_dark"
+                        android:background="@color/warm_white"
+                        android:padding="12dp" />
+                </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cooking Level"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_mid"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="3dp" />
+                    <TextView
+                        android:id="@+id/tvDisplayCookingLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_dark"
+                        android:background="@color/warm_white"
+                        android:padding="12dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ── Edit mode fields (hidden by default) ── -->
+            <LinearLayout
+                android:id="@+id/groupEditMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cooking Level"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_marginBottom="24dp">
-                <AutoCompleteTextView
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="First Name"
+                        style="@style/CookBook.TextInputLayout"
+                        android:layout_marginEnd="8dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFirstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/text_dark" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Last Name"
+                        style="@style/CookBook.TextInputLayout">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/text_dark" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    style="@style/CookBook.TextInputLayout"
+                    android:layout_marginBottom="14dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmailEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/text_dark"
+                        android:focusable="false"
+                        android:alpha="0.6" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Cooking level: plain spinner, no TextInputLayout wrapper -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cooking Level"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_mid"
+                    android:layout_marginBottom="6dp" />
+
+                <Spinner
                     android:id="@+id/spinnerCookingLevel"
                     android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="@drawable/input_bg"
+                    android:padding="14dp"
+                    android:popupBackground="@color/cream"
+                    android:layout_marginBottom="24dp" />
+
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:textColor="@color/text_dark"
-                    android:padding="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text=""
+                    android:textColor="@color/error"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="12dp" />
 
-            <TextView
-                android:id="@+id/tvError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/error"
-                android:textSize="13sp"
-                android:visibility="gone"
-                android:layout_marginBottom="12dp" />
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminateTint="@color/terracotta"
+                    android:visibility="gone"
+                    android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:text="Save Changes"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/terracotta"
-                android:layout_marginBottom="12dp" />
+                <!-- Save / Cancel row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminateTint="@color/terracotta"
-                android:visibility="gone"
-                android:layout_marginBottom="12dp" />
+                    <Button
+                        android:id="@+id/btnCancel"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:text="Cancel"
+                        android:textColor="@color/terracotta"
+                        android:backgroundTint="@color/peach_light"
+                        android:layout_marginEnd="8dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:strokeColor="@color/border" />
+
+                    <Button
+                        android:id="@+id/btnSave"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:text="Save Changes"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/terracotta" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/border"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp" />
 
             <Button
