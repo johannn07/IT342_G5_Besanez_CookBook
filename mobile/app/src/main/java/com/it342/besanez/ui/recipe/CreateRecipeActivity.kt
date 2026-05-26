@@ -1,6 +1,8 @@
 package com.it342.besanez.ui.recipe
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -161,20 +163,43 @@ class CreateRecipeActivity : AppCompatActivity() {
         ingredientRows.add(row)
 
         val rowView = layoutInflater.inflate(R.layout.item_ingredient_input, llIngredients, false)
+
         val etQty = rowView.findViewById<EditText>(R.id.etQty)
-        val etUnit = rowView.findViewById<EditText>(R.id.etUnit)
+        val spinnerUnit = rowView.findViewById<Spinner>(R.id.spinnerUnit)
         val etIngName = rowView.findViewById<EditText>(R.id.etIngName)
         val etIngNotes = rowView.findViewById<EditText>(R.id.etIngNotes)
         val btnRemove = rowView.findViewById<ImageButton>(R.id.btnRemoveIng)
 
+        // IngredientUnit enum values (exactly as in backend)
+        val unitOptions = listOf("") + listOf(
+            "G", "KG", "OZ", "LB",                       // Weight
+            "ML", "L", "TSP", "TBSP", "CUP", "FL_OZ",    // Volume
+            "PIECE", "PINCH", "CLOVE", "SLICE", "OTHER"   // Count / other
+        )
+
+        // Use custom HintAdapter to show "Unit" as grey hint
+        val adapter = HintAdapter(this, unitOptions, "Unit")
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerUnit.adapter = adapter
+
+        // Pre-select if editing, else keep hint (position 0)
+        val selectedIndex = if (row.unit.isNotEmpty()) unitOptions.indexOf(row.unit).coerceAtLeast(0) else 0
+        spinnerUnit.setSelection(selectedIndex)
+
+        spinnerUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Position 0 is the hint, keep unit empty
+                row.unit = if (position == 0) "" else unitOptions[position]
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        // Populate other fields
         etQty.setText(if (row.quantity > 0) row.quantity.toString() else "")
-        etUnit.setText(row.unit)
         etIngName.setText(row.name)
         etIngNotes.setText(row.notes)
 
-        // Live sync into data model
         etQty.onFocusChange { row.quantity = it.trim().toIntOrNull() ?: 0 }
-        etUnit.onFocusChange { row.unit = it.trim() }
         etIngName.onFocusChange { row.name = it.trim() }
         etIngNotes.onFocusChange { row.notes = it.trim() }
 
@@ -260,7 +285,6 @@ class CreateRecipeActivity : AppCompatActivity() {
                         ivImagePreview.visibility = View.VISIBLE
                         Glide.with(this@CreateRecipeActivity).load(recipe.imageUrl).centerCrop().into(ivImagePreview)
                     }
-
                 }
                 if (ing.isSuccessful) ing.body()?.forEach { i ->
                     addIngredientRow(IngredientRow(i.id, i.name, i.quantity, i.unit ?: "", i.notes ?: ""))
@@ -279,4 +303,41 @@ class CreateRecipeActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
+}
+
+class HintAdapter(
+    context: Context,
+    private val items: List<String>,
+    private val hintText: String = "Unit"
+) : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, items) {
+
+    override fun getCount(): Int = items.size
+
+    override fun getItem(position: Int): String = items[position]
+
+    override fun getItemId(position: Int): Long = position.toLong()
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val view = super.getView(position, convertView, parent) as TextView
+        if (position == 0) {
+            view.text = hintText
+            view.setTextColor(Color.GRAY)
+        } else {
+            view.setTextColor(Color.BLACK)  // or use your app's default text color
+        }
+        return view
+    }
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val view = super.getDropDownView(position, convertView, parent) as TextView
+        if (position == 0) {
+            view.text = hintText
+            view.setTextColor(Color.GRAY)
+        } else {
+            view.setTextColor(Color.BLACK)
+        }
+        return view
+    }
+
+    override fun isEnabled(position: Int): Boolean = position != 0
 }
