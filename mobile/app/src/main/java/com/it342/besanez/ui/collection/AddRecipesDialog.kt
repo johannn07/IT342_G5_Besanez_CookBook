@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -83,21 +84,11 @@ class AddRecipesDialog(
             }
         })
 
+        view.findViewById<Button>(R.id.btnCancel).setOnClickListener { dismiss() }
+        view.findViewById<Button>(R.id.btnAdd).setOnClickListener { confirmAdd() }
+
         loadRecipes()
         return view
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val d = dialog as? androidx.appcompat.app.AlertDialog ?: return
-        d.setButton(
-            androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE, "Add"
-        ) { _, _ -> /* handled below */ }
-        d.setButton(
-            androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE, "Cancel"
-        ) { _, _ -> dismiss() }
-        d.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
-            ?.setOnClickListener { confirmAdd() }
     }
 
     private fun loadRecipes() {

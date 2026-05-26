@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -46,28 +47,14 @@ class AddToCollectionDialog(
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
 
+        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
+        val btnAdd = view.findViewById<Button>(R.id.btnAdd)
+
+        btnCancel.setOnClickListener { dismiss() }
+        btnAdd.setOnClickListener { confirmAdd() }
+
         loadCollections()
-
-        // Positive button wired after show — set here via neutral workaround
-        view.tag = "ready"
         return view
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val d = dialog as? androidx.appcompat.app.AlertDialog ?: return
-        // Override buttons after dialog shown so we control dismiss
-        d.setButton(
-            androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE,
-            "Add"
-        ) { _, _ -> /* handled below */ }
-        d.setButton(
-            androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE,
-            "Cancel"
-        ) { _, _ -> dismiss() }
-
-        d.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
-            ?.setOnClickListener { confirmAdd() }
     }
 
     private fun loadCollections() {
