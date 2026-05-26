@@ -57,6 +57,14 @@ class CollectionFragment : Fragment() {
         fabAdd.setOnClickListener { showFormDialog(null) }
     }
 
+    // Reload when returning from CollectionDetailActivity (e.g. after deletion)
+    override fun onResume() {
+        super.onResume()
+        if (::vm.isInitialized) {
+            vm.load()
+        }
+    }
+
     // ── RecyclerView ─────────────────────────────────────────────────────────
 
     private fun setupList() {
@@ -134,7 +142,7 @@ class CollectionFragment : Fragment() {
             etDesc.setText(it.description ?: "")
         }
 
-        MaterialAlertDialogBuilder(requireContext(),  R.style.CookBook_Dialog)
+        MaterialAlertDialogBuilder(requireContext(), R.style.CookBook_Dialog)
             .setTitle(if (existing == null) "New Collection" else "Edit Collection")
             .setView(dialogView)
             .setPositiveButton(if (existing == null) "Create" else "Save") { _, _ ->

@@ -14,8 +14,8 @@ object ApiClient {
 
     // Use 10.0.2.2 for Android emulator → maps to host machine localhost
     // Change to your machine's local IP (e.g. 192.168.x.x) for physical device
-    private const val BASE_URL = "http://192.168.1.48:8080/"
-    //private const val BASE_URL = "http://10.0.2.2:8080/"
+    //private const val BASE_URL = "http://192.168.1.48:8080/"
+    private const val BASE_URL = "http://10.0.2.2:8080/"
 
     private var tokenManager: TokenManager? = null
 
