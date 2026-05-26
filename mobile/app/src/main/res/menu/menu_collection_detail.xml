@@ -3,15 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_add_recipes"
+        android:title="Add Recipes"
+        android:icon="@drawable/ic_playlist_add"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_edit"
-        android:title="Edit"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Edit Collection"
+        android:icon="@drawable/ic_edit"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete"
-        android:title="Delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete Collection"
+        android:icon="@drawable/ic_delete"
         app:showAsAction="never" />
 
 </menu>

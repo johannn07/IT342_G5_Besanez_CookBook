@@ -18,7 +18,8 @@
             android:background="@color/warm_white"
             app:titleTextColor="@color/text_dark"
             app:navigationIconTint="@color/text_dark"
-            app:theme="@style/ToolbarOverlay"/>
+            app:theme="@style/ToolbarOverlay"
+            app:popupTheme="@style/PopupOverlay.NoTint" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
