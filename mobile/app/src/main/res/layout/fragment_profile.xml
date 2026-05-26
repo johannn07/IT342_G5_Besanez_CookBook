@@ -91,11 +91,11 @@
 
                 <ImageButton
                     android:id="@+id/btnEditInfo"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_edit"
                     app:tint="@color/terracotta_dark"
-                    android:background="@color/peach_light"
+                    android:background="@color/cream"
                     android:contentDescription="Edit" />
 
             </LinearLayout>
