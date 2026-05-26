@@ -21,6 +21,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     private lateinit var vm: RecipeDetailViewModel
     private var recipeId = 0L
+    private var recipeName = ""
 
     private lateinit var ivImage: ImageView
     private lateinit var tvName: TextView
@@ -43,19 +44,19 @@ class RecipeDetailActivity : AppCompatActivity() {
         recipeId = intent.getLongExtra(EXTRA_RECIPE_ID, 0L)
         vm = ViewModelProvider(this)[RecipeDetailViewModel::class.java]
 
-        ivImage       = findViewById(R.id.ivImage)
-        tvName        = findViewById(R.id.tvName)
-        tvDesc        = findViewById(R.id.tvDesc)
-        tvPrepTime    = findViewById(R.id.tvPrepTime)
-        tvCookTime    = findViewById(R.id.tvCookTime)
-        tvTotalTime   = findViewById(R.id.tvTotalTime)
-        tvVisibility  = findViewById(R.id.tvVisibility)
-        llIngredients = findViewById(R.id.llIngredients)
+        ivImage        = findViewById(R.id.ivImage)
+        tvName         = findViewById(R.id.tvName)
+        tvDesc         = findViewById(R.id.tvDesc)
+        tvPrepTime     = findViewById(R.id.tvPrepTime)
+        tvCookTime     = findViewById(R.id.tvCookTime)
+        tvTotalTime    = findViewById(R.id.tvTotalTime)
+        tvVisibility   = findViewById(R.id.tvVisibility)
+        llIngredients  = findViewById(R.id.llIngredients)
         llInstructions = findViewById(R.id.llInstructions)
-        tvNotes       = findViewById(R.id.tvNotes)
-        sectionNotes  = findViewById(R.id.sectionNotes)
-        progressBar   = findViewById(R.id.progressBar)
-        tvError       = findViewById(R.id.tvError)
+        tvNotes        = findViewById(R.id.tvNotes)
+        sectionNotes   = findViewById(R.id.sectionNotes)
+        progressBar    = findViewById(R.id.progressBar)
+        tvError        = findViewById(R.id.tvError)
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -75,6 +76,11 @@ class RecipeDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_add_to_collection -> {
+                AddToCollectionDialog(recipeId, recipeName)
+                    .show(supportFragmentManager, "add_to_collection")
+                true
+            }
             R.id.action_edit -> {
                 val intent = Intent(this, CreateRecipeActivity::class.java)
                 intent.putExtra(CreateRecipeActivity.EXTRA_RECIPE_ID, recipeId)
@@ -109,6 +115,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
         vm.recipe.observe(this) { recipe ->
             recipe ?: return@observe
+            recipeName = recipe.name
             supportActionBar?.title = recipe.name
             tvName.text = recipe.name
             tvDesc.text = recipe.description ?: ""

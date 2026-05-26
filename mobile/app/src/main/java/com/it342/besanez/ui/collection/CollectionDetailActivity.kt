@@ -25,7 +25,6 @@ class CollectionDetailActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ID   = "collection_id"
         const val EXTRA_NAME = "collection_name"
-
         private const val SLIDE_INTERVAL_MS = 3_000L
     }
 
@@ -40,9 +39,8 @@ class CollectionDetailActivity : AppCompatActivity() {
     private lateinit var tvEmpty: TextView
     private lateinit var tvError: TextView
 
-    // Hero slideshow
     private lateinit var heroFrame: FrameLayout
-    private lateinit var ivHero: android.widget.ImageView
+    private lateinit var ivHero: ImageView
     private val slideshowHandler = Handler(Looper.getMainLooper())
     private var slideImages: List<String> = emptyList()
     private var slideIndex = 0
@@ -75,15 +73,15 @@ class CollectionDetailActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this)[CollectionViewModel::class.java]
 
-        tvTitle      = findViewById(R.id.tvTitle)
-        tvDesc       = findViewById(R.id.tvDesc)
-        tvCount      = findViewById(R.id.tvCount)
-        rvRecipes    = findViewById(R.id.rvRecipes)
-        progressBar  = findViewById(R.id.progressBar)
-        tvEmpty      = findViewById(R.id.tvEmpty)
-        tvError      = findViewById(R.id.tvError)
-        heroFrame    = findViewById(R.id.heroFrame)
-        ivHero       = findViewById(R.id.ivHero)
+        tvTitle     = findViewById(R.id.tvTitle)
+        tvDesc      = findViewById(R.id.tvDesc)
+        tvCount     = findViewById(R.id.tvCount)
+        rvRecipes   = findViewById(R.id.rvRecipes)
+        progressBar = findViewById(R.id.progressBar)
+        tvEmpty     = findViewById(R.id.tvEmpty)
+        tvError     = findViewById(R.id.tvError)
+        heroFrame   = findViewById(R.id.heroFrame)
+        ivHero      = findViewById(R.id.ivHero)
 
         setupList()
         setupObservers()
@@ -111,12 +109,10 @@ class CollectionDetailActivity : AppCompatActivity() {
     private fun initSlideshow(images: List<String>) {
         slideImages = images.filter { it.isNotBlank() }
         slideIndex = 0
-
         if (slideImages.isEmpty()) {
             heroFrame.visibility = View.GONE
             return
         }
-
         heroFrame.visibility = View.VISIBLE
         loadHeroImage(slideImages[0])
         startSlideshow()
@@ -150,6 +146,10 @@ class CollectionDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_add_recipes -> {
+                showAddRecipesDialog()
+                true
+            }
             R.id.action_edit -> {
                 val col = vm.selected.value ?: return true
                 showEditDialog(col)
@@ -195,10 +195,7 @@ class CollectionDetailActivity : AppCompatActivity() {
             tvDesc.visibility = if (col.description.isNullOrBlank()) View.GONE else View.VISIBLE
             tvCount.text = "${col.recipeCount} recipe${if (col.recipeCount != 1) "s" else ""}"
             supportActionBar?.title = col.name
-
-            // Init slideshow from collection's recipe images
-            val images = col.recipeImages ?: emptyList()
-            initSlideshow(images)
+            initSlideshow(col.recipeImages ?: emptyList())
         }
 
         vm.recipes.observe(this) { list ->
@@ -243,10 +240,19 @@ class CollectionDetailActivity : AppCompatActivity() {
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
+    private fun showAddRecipesDialog() {
+        val existingIds = recipeAdapter.currentList.map { it.id }.toSet()
+        AddRecipesDialog(
+            collectionId = collectionId,
+            existingIds = existingIds,
+            onAdded = { vm.loadById(collectionId) }
+        ).show(supportFragmentManager, "add_recipes")
+    }
+
     private fun showEditDialog(col: CollectionResponse) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_collection_form, null)
-        val etName = dialogView.findViewById<EditText>(R.id.etName)
-        val etDesc = dialogView.findViewById<EditText>(R.id.etDesc)
+        val etName = dialogView.findViewById<android.widget.EditText>(R.id.etName)
+        val etDesc = dialogView.findViewById<android.widget.EditText>(R.id.etDesc)
         etName.setText(col.name)
         etDesc.setText(col.description ?: "")
 
