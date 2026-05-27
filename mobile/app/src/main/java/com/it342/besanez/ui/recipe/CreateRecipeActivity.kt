@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,8 +58,6 @@ class CreateRecipeActivity : AppCompatActivity() {
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = if (editId > 0) "Edit Recipe" else "New Recipe"
 
         editId = intent.getLongExtra(EXTRA_RECIPE_ID, 0L)
         vm = ViewModelProvider(this)[CreateRecipeViewModel::class.java]
@@ -65,7 +65,30 @@ class CreateRecipeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = if (editId > 0) "Edit Recipe" else "New Recipe"
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = if (editId > 0) "Edit Recipe" else "New Recipe"
+
         bindViews()
+
+        etTotalTime.apply {
+            isEnabled = false
+            isFocusable = false
+            hint = "Auto‑calculated"
+        }
+        fun updateTotal() {
+            val prep = etPrepTime.text.toString().toIntOrNull() ?: 0
+            val cook = etCookTime.text.toString().toIntOrNull() ?: 0
+            val total = prep + cook
+            etTotalTime.setText(if (total > 0) total.toString() else "")
+        }
+        val timeWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) { updateTotal() }
+        }
+        etPrepTime.addTextChangedListener(timeWatcher)
+        etCookTime.addTextChangedListener(timeWatcher)
+
         setupListeners()
         observe()
 
