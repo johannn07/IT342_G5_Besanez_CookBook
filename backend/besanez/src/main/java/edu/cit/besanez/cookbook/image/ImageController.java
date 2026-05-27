@@ -18,59 +18,61 @@ import java.util.Map;
 public class ImageController {
 
     private final CloudinaryService cloudinaryService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(
             HttpServletRequest request,
             @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "folder", defaultValue = "recipes") String folder) {
+            @RequestParam(value = "subfolder", defaultValue = "recipes") String subfolder) {
+
+        // 1. Validate the file itself
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "No file provided."));
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Only image files are accepted."));
+        }
+        if (file.getSize() > 5 * 1024 * 1024) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Image must be smaller than 5 MB."));
+        }
+
+        // 2. Extract user ID from JWT (no trusting the client)
+        Long userId = extractUserId(request);
+        if (userId == null) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("message", "Unauthorized: invalid or missing token."));
+        }
+
+        // 3. Allow only "recipes" or "profiles" as the subfolder
+        if (!"recipes".equals(subfolder) && !"profiles".equals(subfolder)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Subfolder must be 'recipes' or 'profiles'."));
+        }
+
+        // 4. Build the full, user‑scoped folder path
+        String folder = "users/" + userId + "/" + subfolder;
+
+        // 5. Upload
         try {
-            // ── Validate file ──────────────────────────────────────────────────
-            if (file == null || file.isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("message", "No file provided."));
-            }
-
-            String contentType = file.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("message", "Only image files are accepted (JPEG, PNG, GIF, WEBP)."));
-            }
-
-            if (file.getSize() > 5 * 1024 * 1024) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("message", "Image must be smaller than 5 MB."));
-            }
-
-            String sanitizedFolder = sanitizeFolder(folder);
-            if (sanitizedFolder == null) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("message",
-                                "Invalid folder. Expected format: users/{userId}/recipes or users/{userId}/profiles"));
-            }
-
-            // ── Upload ─────────────────────────────────────────────────────────
-            String url = cloudinaryService.uploadImage(file, sanitizedFolder);
+            String url = cloudinaryService.uploadImage(file, folder);
             return ResponseEntity.ok(Map.of("url", url));
-
         } catch (Exception e) {
             return ResponseEntity.status(500)
                     .body(Map.of("message", "Upload failed: " + e.getMessage()));
         }
     }
 
-    private String sanitizeFolder(String folder) {
-        if (folder == null || folder.isBlank())
-            return null;
-
-        if (folder.equals("recipes") || folder.equals("profiles")) {
-            return folder;
+    private Long extractUserId(HttpServletRequest request) {
+        // Reuse your existing token extraction logic from JwtUtil
+        String token = jwtUtil.extractTokenFromRequest(request); // you may need to add this method
+        if (token != null && jwtUtil.validateToken(token)) {
+            return jwtUtil.extractUserId(token); // add a method to get user id from claims
         }
-
-        if (folder.matches("^users/\\d+/(recipes|profiles)$")) {
-            return folder;
-        }
-
         return null;
     }
 }

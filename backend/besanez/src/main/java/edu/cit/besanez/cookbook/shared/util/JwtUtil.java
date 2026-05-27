@@ -3,6 +3,7 @@ package edu.cit.besanez.cookbook.shared.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,9 +42,23 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Original validate – still used when you have both the token and the expected
+     * email
+     */
     public Boolean validateToken(String token, String email) {
         final String extractedEmail = extractEmail(token);
         return (extractedEmail.equals(email) && !isTokenExpired(token));
+    }
+
+    /** New convenience overload – validates token expiration and signature */
+    public boolean validateToken(String token) {
+        try {
+            extractAllClaims(token); // will throw if signature invalid / expired
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String extractEmail(String token) {
@@ -74,5 +89,14 @@ public class JwtUtil {
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    /** Extract the Bearer token from the Authorization header */
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        final String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 }

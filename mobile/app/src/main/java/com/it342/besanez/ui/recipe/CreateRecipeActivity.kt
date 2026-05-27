@@ -289,33 +289,46 @@ class CreateRecipeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val api = ApiClient.apiService
-                val r = api.getRecipeById(editId)
-                val ing = api.getIngredients(editId)
-                val inst = api.getInstructions(editId)
+                val rRes   = api.getRecipeById(editId)
+                val ingRes = api.getIngredients(editId)
+                val instRes = api.getInstructions(editId)
 
-                if (r.isSuccessful) r.body()?.let { recipe ->
+                if (rRes.isSuccessful) rRes.body()?.let { recipe ->
                     etName.setText(recipe.name)
                     etDesc.setText(recipe.description ?: "")
                     etPrepTime.setText(recipe.prepTimeMinutes?.toString() ?: "")
                     etCookTime.setText(recipe.cookTimeMinutes?.toString() ?: "")
                     etTotalTime.setText(recipe.totalTimeMinutes?.toString() ?: "")
                     etNotes.setText(recipe.notes ?: "")
-                    etImageUrl.setText(recipe.imageUrl ?: "")
                     cbPublic.isChecked = recipe.isPublic
 
+                    // Load existing image into preview
                     if (!recipe.imageUrl.isNullOrBlank()) {
                         uploadedImageUrl = recipe.imageUrl
                         ivImagePreview.visibility = View.VISIBLE
-                        Glide.with(this@CreateRecipeActivity).load(recipe.imageUrl).centerCrop().into(ivImagePreview)
+                        Glide.with(this@CreateRecipeActivity)
+                            .load(recipe.imageUrl)
+                            .centerCrop()
+                            .into(ivImagePreview)
                     }
                 }
-                if (ing.isSuccessful) ing.body()?.forEach { i ->
-                    addIngredientRow(IngredientRow(i.id, i.name, i.quantity, i.unit ?: "", i.notes ?: ""))
+
+                if (ingRes.isSuccessful) ingRes.body()?.forEach { i ->
+                    addIngredientRow(
+                        IngredientRow(i.id, i.name, i.quantity, i.unit ?: "", i.notes ?: "")
+                    )
                 }
-                if (inst.isSuccessful) inst.body()?.sortedBy { it.stepNumber }?.forEach { s ->
-                    addInstructionRow(InstructionRow(s.id, s.stepNumber, s.description))
-                }
-            } catch (_: Exception) {}
+
+                if (instRes.isSuccessful) instRes.body()
+                    ?.sortedBy { it.stepNumber }
+                    ?.forEach { s ->
+                        addInstructionRow(InstructionRow(s.id, s.stepNumber, s.description))
+                    }
+
+            } catch (e: Exception) {
+                tvError.text = "Failed to load recipe: ${e.message}"
+                tvError.visibility = View.VISIBLE
+            }
         }
     }
 
