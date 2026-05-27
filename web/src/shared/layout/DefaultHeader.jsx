@@ -30,7 +30,6 @@ const DefaultHeader = ({ user = null }) => {
     };
   }, [showLoginModal, showRegisterModal]);
 
-  // ─── Close dropdown on outside click ──────────────────────────────────────
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -41,7 +40,6 @@ const DefaultHeader = ({ user = null }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ─── Modal helpers ─────────────────────────────────────────────────────────
   const openLoginModal = () => {
     setShowRegisterModal(false);
     setShowLoginModal(true);
@@ -67,14 +65,12 @@ const DefaultHeader = ({ user = null }) => {
     setShowLoginModal(true);
   };
 
-  // ─── Logout ───────────────────────────────────────────────────────────────
   const handleLogout = async () => {
     setShowProfileDropdown(false);
     await logout();
     navigate('/');
   };
 
-  // ─── Avatar helpers ───────────────────────────────────────────────────────
   const getUserAcronym = () => {
     if (!user) return '?';
     const first = user.firstName?.[0] ?? '';
@@ -99,7 +95,6 @@ const DefaultHeader = ({ user = null }) => {
       <header className={styles.header}>
         <nav className={styles.nav}>
 
-          {/* Brand */}
           <Link to={user ? '/dashboard' : '/'} className={styles.brand}>
             <div className={styles.logoIcon}>
               <UtensilsCrossed size={22} color="white" strokeWidth={2} />
@@ -107,7 +102,6 @@ const DefaultHeader = ({ user = null }) => {
             <span className={styles.logoText}>CookBook</span>
           </Link>
 
-          {/* Feature nav — hidden on landing */}
           {!isLandingPage && !isSharedPage && (
             <ul className={styles.navLinks}>
               <li><Link to="/dashboard" className={styles.navLink}>Dashboard</Link></li>
@@ -116,7 +110,6 @@ const DefaultHeader = ({ user = null }) => {
             </ul>
           )}
 
-          {/* Right-side menu */}
           <div className={styles.menu}>
             {!user && (
               <>

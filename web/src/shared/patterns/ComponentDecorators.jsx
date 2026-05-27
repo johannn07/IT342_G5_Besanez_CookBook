@@ -1,15 +1,5 @@
 import { Component } from 'react';
 
-// ─── Decorator: withErrorBoundary ─────────────────────────────────────────────
-
-/**
- * Wraps a component in a React class-based error boundary. Any unhandled
- * exception thrown during render, lifecycle, or an effect is caught here
- * and replaced with a friendly fallback instead of blanking the page.
- *
- * @param {React.ComponentType} WrappedComponent
- * @returns {React.ComponentType}
- */
 export function withErrorBoundary(WrappedComponent) {
     class ErrorBoundary extends Component {
         constructor(props) {

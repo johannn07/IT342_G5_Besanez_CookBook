@@ -23,7 +23,6 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, externalError = '' })
     }, 300);
   }, [onClose]);
 
-  // Show external error (e.g. from failed Google login) when modal opens
   useEffect(() => {
     if (isOpen && externalError) {
       setError(externalError);

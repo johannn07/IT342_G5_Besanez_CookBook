@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.cit.besanez.cookbook.collection.CollectionEntity;
 import edu.cit.besanez.cookbook.collection.CollectionRepository;
 import edu.cit.besanez.cookbook.ingredient.IngredientEntity;
 import edu.cit.besanez.cookbook.ingredient.IngredientRepository;
@@ -43,7 +41,6 @@ public class ShareService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Recipe not found with id: " + recipeId));
 
-        // Reuse existing token or generate a fresh one
         if (recipe.getShareToken() == null) {
             recipe.setShareToken(UUID.randomUUID().toString());
             recipeRepository.save(recipe);
@@ -88,7 +85,6 @@ public class ShareService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Shared recipe not found or link has expired."));
 
-        // Prevent saving your own recipe
         if (source.getUser().getId() == userId) {
             throw new IllegalArgumentException("You cannot save your own recipe.");
         }
@@ -96,7 +92,6 @@ public class ShareService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-        // Clone the recipe (private by default)
         RecipeEntity copy = RecipeEntity.builder()
                 .name(source.getName())
                 .description(source.getDescription())
@@ -111,7 +106,6 @@ public class ShareService {
 
         RecipeEntity savedCopy = recipeRepository.save(copy);
 
-        // Clone ingredients
         List<IngredientEntity> ingredients = ingredientRepository.findByRecipeId(source.getId());
         for (IngredientEntity ing : ingredients) {
             IngredientEntity clonedIng = IngredientEntity.builder()
@@ -124,7 +118,6 @@ public class ShareService {
             ingredientRepository.save(clonedIng);
         }
 
-        // Clone instructions
         List<InstructionEntity> instructions = instructionRepository
                 .findByRecipeIdOrderByStepNumberAsc(source.getId());
         for (InstructionEntity inst : instructions) {
@@ -136,7 +129,6 @@ public class ShareService {
             instructionRepository.save(clonedInst);
         }
 
-        // Add to requested collections (must belong to this user)
         for (Long colId : collectionIds) {
             collectionRepository.findByIdAndUserId(colId, userId).ifPresent(col -> {
                 col.addRecipe(savedCopy);

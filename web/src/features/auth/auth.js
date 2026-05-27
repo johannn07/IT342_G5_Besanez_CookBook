@@ -52,7 +52,6 @@ const authAPI = {
   changePassword,
   forgotPassword,
   getMe,
-  // Keep legacy alias used by AuthContext
   getProfile: getMe,
   sendVerificationCode,
   verifyCode,

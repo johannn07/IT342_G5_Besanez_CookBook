@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             navigate('/', { replace: true });
         });
-        return unsubscribe; // cleanup on unmount
+        return unsubscribe;
     }, [navigate]);
 
     const login = async (email, password) => {
@@ -106,7 +106,6 @@ export const AuthProvider = ({ children }) => {
 
     const loginWithGoogle = useCallback(async (token, userData) => {
         localStorage.setItem('token', token);
-        // Re-fetch full profile (including role) after Google login
         try {
             const meRes = await authAPI.getMe();
             setUser(meRes.data);

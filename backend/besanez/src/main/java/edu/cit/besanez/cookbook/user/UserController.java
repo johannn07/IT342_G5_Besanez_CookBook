@@ -103,11 +103,9 @@ public class UserController {
 
             long userId = extractUserId(request);
 
-            // Upload to Cloudinary under user-scoped profile folder
             String folder = "users/" + userId + "/profiles";
             String cloudinaryUrl = cloudinaryService.uploadImage(file, folder);
 
-            // Persist the CDN URL
             UserResponseDTO updated = userService.updateProfileImage(userId, cloudinaryUrl);
             return ResponseEntity.ok(updated);
 

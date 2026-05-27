@@ -5,12 +5,6 @@ export class CloudinaryStrategy {
     label = 'Upload Photo';
     icon = '📷';
 
-    /**
-     * @param {{ file: File, userId?: number|string }} state
-     *   userId is used to build the user-scoped Cloudinary folder:
-     *     users/{userId}/recipes
-     *   Falls back to the flat "recipes" folder if userId is not provided.
-     */
     async resolve({ file, userId }) {
         if (!file) return null;
         const folder = userId ? `users/${userId}/recipes` : 'recipes';

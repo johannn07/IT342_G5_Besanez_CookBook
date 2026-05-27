@@ -41,16 +41,6 @@ public class RecipeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    /**
-     * GET /api/recipe — all recipes (paginated)
-     * GET /api/recipe?search=x — search by name (paginated)
-     * GET /api/recipe?collection=x — scoped to a collection (paginated)
-     *
-     * Pagination params (all optional, Spring resolves automatically):
-     * ?page=0 — zero-based page number (default: 0)
-     * ?size=10 — page size (default: 10)
-     * ?sort=name,asc — sort field and direction (default: createdAt, desc)
-     */
     @GetMapping
     public ResponseEntity<Page<RecipeResponseDTO>> getRecipes(
             HttpServletRequest request,

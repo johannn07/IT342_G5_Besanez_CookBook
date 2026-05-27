@@ -2,12 +2,6 @@ package edu.cit.besanez.cookbook.share;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +25,6 @@ public class ShareController {
         return jwtUtil.extractUserId(token);
     }
 
-    /**
-     * POST /api/share/recipe/:id
-     * Generates (or refreshes) a unique share token for a recipe.
-     * Only the recipe owner can call this.
-     * Response: { shareToken, shareUrl }
-     */
     @PostMapping("/recipe/{recipeId}")
     public ResponseEntity<?> generateShareToken(
             HttpServletRequest request,
@@ -46,10 +34,6 @@ public class ShareController {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * DELETE /api/share/recipe/:id
-     * Revokes the share link for a recipe (sets shareToken to null).
-     */
     @DeleteMapping("/recipe/{recipeId}")
     public ResponseEntity<Void> revokeShareToken(
             HttpServletRequest request,
@@ -59,23 +43,12 @@ public class ShareController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * GET /api/share/:token
-     * Public — resolves a share token and returns the recipe preview.
-     * No auth required.
-     */
     @GetMapping("/{token}")
     public ResponseEntity<RecipeResponseDTO> getSharedRecipe(@PathVariable String token) {
         RecipeResponseDTO recipe = shareService.getRecipeByShareToken(token);
         return ResponseEntity.ok(recipe);
     }
 
-    /**
-     * POST /api/share/:token/save
-     * Authenticated — saves a shared recipe as a copy for the calling user.
-     * Body (optional): { collectionIds: [1, 2] }
-     * Response: the newly created RecipeResponseDTO copy
-     */
     @PostMapping("/{token}/save")
     public ResponseEntity<RecipeResponseDTO> saveSharedRecipe(
             HttpServletRequest request,

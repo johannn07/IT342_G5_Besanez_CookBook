@@ -2,32 +2,16 @@ import { useRef, useState, useEffect } from 'react';
 import { Camera, Link, ImageIcon, Loader } from 'lucide-react';
 import styles from '../CreateRecipe.module.css';
 
-/**
- * ImageUploader — controlled component.
- *
- * Parent owns all image state (imageMode, imagePreview, urlInput, uploading).
- * This component only calls onImageChange with an action descriptor:
- *
- *   { action: 'SELECT_FILE', file }
- *   { action: 'APPLY_URL',   url  }
- *   { action: 'REMOVE'           }
- *   { action: 'SWITCH_MODE', mode }
- *
- * Parent is responsible for validation, blob URL creation, and state updates.
- */
 const ImageUploader = ({ mode, preview, urlInput, uploading, onImageChange }) => {
     const fileInputRef = useRef(null);
     const [dragOver, setDragOver] = useState(false);
 
-    // localUrl is purely for the text field — initialized from urlInput prop,
-    // synced when parent resets (preview cleared) or when urlInput changes (edit mode load).
     const [localUrl, setLocalUrl] = useState(urlInput || '');
 
     useEffect(() => {
         setLocalUrl(urlInput || '');
     }, [urlInput]);
 
-    // When parent resets preview (e.g. on mode switch or remove), clear the text field too
     useEffect(() => {
         if (!preview) setLocalUrl('');
     }, [preview]);

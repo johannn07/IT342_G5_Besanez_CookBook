@@ -2,10 +2,8 @@ package edu.cit.besanez.cookbook.admin;
 
 import edu.cit.besanez.cookbook.collection.CollectionResponseDTO;
 import edu.cit.besanez.cookbook.recipe.RecipeResponseDTO;
-import edu.cit.besanez.cookbook.shared.util.JwtUtil;
 import edu.cit.besanez.cookbook.user.UserRequestDTO;
 import edu.cit.besanez.cookbook.user.UserResponseDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final JwtUtil jwtUtil;
 
     // ─── Dashboard ────────────────────────────────────────────────────────────
 

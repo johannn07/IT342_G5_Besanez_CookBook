@@ -3,7 +3,6 @@ import ImageUploader from './ImageUploader';
 import { FileText } from 'lucide-react';
 
 const RecipeBasicInfo = ({ form, onChange, imageMode, imagePreview, imageFile, urlInput, uploading, onImageChange }) => {
-    // handleTimeBlur removed – totalTimeMinutes is now computed automatically in the parent
 
     return (
         <section className={styles.formSection}>

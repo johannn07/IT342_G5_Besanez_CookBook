@@ -46,7 +46,6 @@ const SharePanel = ({ recipeId, initialToken }) => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2200);
         } catch {
-            // Fallback for browsers that block clipboard
             const input = document.createElement('input');
             input.value = shareUrl;
             document.body.appendChild(input);

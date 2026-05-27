@@ -57,18 +57,9 @@ public class UserEntity {
     @Column(nullable = true)
     private String password;
 
-    /**
-     * URL or base64 data URL for the user's profile photo.
-     * Stored as TEXT to accommodate large base64 strings during development.
-     * In production this should be a CDN URL (Cloudinary / S3).
-     */
     @Column(nullable = true, columnDefinition = "TEXT")
     private String profileImage;
 
-    /**
-     * Cooking skill level. Stored as a string enum.
-     * Defaults to BEGINNER for new accounts.
-     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default

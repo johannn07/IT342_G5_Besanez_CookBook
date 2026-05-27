@@ -57,7 +57,6 @@ public class MobileAuthController {
             String lastName = (String) payload.get("family_name");
             String picture = (String) payload.get("picture");
 
-            // Reuse existing OAuth2 login/register logic
             LoginResponse loginResponse = authService.loginOrRegisterMobileGoogleUser(
                     email, firstName, lastName, picture);
 

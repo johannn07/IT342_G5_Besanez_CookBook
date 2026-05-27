@@ -19,6 +19,5 @@ public class LoginResponse {
     private String firstName;
     private String lastName;
 
-    // Full user object — includes profileImage and all other fields
     private UserResponseDTO user;
 }

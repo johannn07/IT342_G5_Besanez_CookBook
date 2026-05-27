@@ -9,7 +9,6 @@ const OAuth2Callback = () => {
     const processed = useRef(false);
 
     useEffect(() => {
-        // Prevent re-processing
         if (processed.current) return;
 
         try {
@@ -18,8 +17,6 @@ const OAuth2Callback = () => {
 
             if (token) {
                 processed.current = true;
-
-                // Optional: clean URL to prevent accidental reprocessing
                 window.history.replaceState({}, document.title, window.location.pathname);
 
                 const userData = {
@@ -38,7 +35,7 @@ const OAuth2Callback = () => {
             console.error('OAuth2Callback error:', err);
             navigate('/?error=true', { replace: true });
         }
-    }, [navigate, loginWithGoogle]); // dependencies are now stable
+    }, [navigate, loginWithGoogle]);
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>

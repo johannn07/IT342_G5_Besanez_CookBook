@@ -21,7 +21,6 @@ const Collections = () => {
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('createdAt,desc');
 
-    // modal state: null = closed, { mode, collection? }
     const [modal, setModal] = useState(null);
 
     const fetchCollections = useCallback(async () => {

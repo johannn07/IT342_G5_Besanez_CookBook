@@ -1,14 +1,11 @@
 package edu.cit.besanez.cookbook.admin;
 
 import edu.cit.besanez.cookbook.collection.CollectionRepository;
-import edu.cit.besanez.cookbook.collection.CollectionRequestDTO;
 import edu.cit.besanez.cookbook.collection.CollectionResponseDTO;
 import edu.cit.besanez.cookbook.collection.CollectionService;
 import edu.cit.besanez.cookbook.recipe.RecipeEntity;
 import edu.cit.besanez.cookbook.recipe.RecipeRepository;
-import edu.cit.besanez.cookbook.recipe.RecipeRequestDTO;
 import edu.cit.besanez.cookbook.recipe.RecipeResponseDTO;
-import edu.cit.besanez.cookbook.recipe.RecipeService;
 import edu.cit.besanez.cookbook.shared.exception.ResourceNotFoundException;
 import edu.cit.besanez.cookbook.user.DefaultDataSeederService;
 import edu.cit.besanez.cookbook.user.UserEntity;
@@ -36,7 +33,6 @@ public class AdminService {
     private final RecipeRepository recipeRepository;
     private final CollectionRepository collectionRepository;
     private final UserService userService;
-    private final RecipeService recipeService;
     private final CollectionService collectionService;
     private final DefaultDataSeederService seederService;
 

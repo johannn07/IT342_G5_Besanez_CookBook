@@ -45,7 +45,6 @@ const Profile = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     };
 
-    // ─── Edit mode helpers ──────────────────────────────────────────────────────
     const handleStartEdit = () => {
         setFormSnapshot({ ...form });
         setIsEditing(true);
@@ -56,7 +55,6 @@ const Profile = () => {
         setIsEditing(false);
     };
 
-    // ─── Profile image ──────────────────────────────────────────────────────────
     const handleFileChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -106,7 +104,6 @@ const Profile = () => {
         }
     };
 
-    // ─── Update Profile ─────────────────────────────────────────────────────────
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
         setSavingProfile(true);

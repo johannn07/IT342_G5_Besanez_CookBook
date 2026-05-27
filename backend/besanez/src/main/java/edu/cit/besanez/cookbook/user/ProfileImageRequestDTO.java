@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProfileImageRequestDTO {
 
-    // Nullable — passing null or empty string clears the profile image
     @Size(max = 1000, message = "Profile image URL must not exceed 1000 characters")
     private String profileImage;
 }

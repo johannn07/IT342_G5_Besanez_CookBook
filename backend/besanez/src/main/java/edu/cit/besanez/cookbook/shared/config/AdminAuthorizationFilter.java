@@ -14,10 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Intercepts all /api/admin/** requests and returns 403 if the caller is not
- * an ADMIN. This runs AFTER JwtAuthenticationFilter sets the security context.
- */
 @Component
 @RequiredArgsConstructor
 public class AdminAuthorizationFilter extends OncePerRequestFilter {

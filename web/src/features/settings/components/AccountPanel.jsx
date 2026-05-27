@@ -47,7 +47,6 @@ const AccountPanel = ({ user, emailVerified, onOpenVerify, onOpenDelete }) => {
                 )}
             </div>
 
-            {/* Connected accounts section */}
             <div className={styles.section}>
                 <h3 className={styles.sectionTitle}>
                     <Globe size={15} strokeWidth={2} style={{ marginRight: 7, verticalAlign: 'text-bottom' }} />
@@ -73,7 +72,6 @@ const AccountPanel = ({ user, emailVerified, onOpenVerify, onOpenDelete }) => {
                 </div>
             </div>
 
-            {/* Danger zone */}
             <div className={`${styles.section} ${styles.dangerSection}`}>
                 <h3 className={styles.dangerTitle}>
                     <Trash2 size={15} strokeWidth={2} style={{ marginRight: 7, verticalAlign: 'text-bottom' }} />

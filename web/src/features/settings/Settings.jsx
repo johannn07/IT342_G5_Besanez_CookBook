@@ -22,7 +22,6 @@ const Settings = () => {
     const [activeSection, setActiveSection] = useState('account');
     const [message, setMessage] = useState({ text: '', type: '' });
 
-    // Email verification state
     const [showVerifyModal, setShowVerifyModal] = useState(false);
     const [verifyStep, setVerifyStep] = useState('idle');
     const [verifyCode, setVerifyCode] = useState('');
@@ -30,7 +29,6 @@ const Settings = () => {
     const [verifying, setVerifying] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user?.emailVerified ?? false);
 
-    // Delete account state
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteConfirmEmail, setDeleteConfirmEmail] = useState('');
     const [deleting, setDeleting] = useState(false);
@@ -39,8 +37,6 @@ const Settings = () => {
         setMessage({ text, type });
         setTimeout(() => setMessage({ text: '', type: '' }), 3500);
     };
-
-    // ─── Email verification handlers ─────────────────────────────────────────
 
     const handleOpenVerify = () => {
         setVerifyStep('idle');
@@ -82,8 +78,6 @@ const Settings = () => {
         }
     };
 
-    // ─── Delete account handler ───────────────────────────────────────────────
-
     const handleDeleteAccount = async () => {
         if (deleteConfirmEmail !== user?.email) return;
         setDeleting(true);
@@ -102,7 +96,6 @@ const Settings = () => {
             <DefaultHeader user={user} />
 
             <div className={styles.page}>
-                {/* Sidebar */}
                 <aside className={styles.sidebar}>
                     <p className={styles.sidebarHeading}>Settings</p>
                     <nav className={styles.sidebarNav}>
@@ -119,7 +112,6 @@ const Settings = () => {
                     </nav>
                 </aside>
 
-                {/* Main content */}
                 <main className={styles.content}>
                     {message.text && (
                         <div className={`${styles.messageBanner} ${styles[message.type]}`}>

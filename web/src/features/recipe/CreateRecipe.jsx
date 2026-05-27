@@ -53,27 +53,23 @@ const CreateRecipe = () => {
     const [urlInput, setUrlInput] = useState('');
     const [uploading, setUploading] = useState(false);
 
-    // Single instance, update strategy when mode changes
     const imageContext = useRef(new ImageUploadContext(IMAGE_STRATEGIES.cloudinary)).current;
     useEffect(() => {
         imageContext.setStrategy(IMAGE_STRATEGIES[imageMode]);
     }, [imageMode, imageContext]);
 
-    // Auto-compute total time whenever prep or cook time changes
     useEffect(() => {
         const prep = Number(form.prepTimeMinutes) || 0;
         const cook = Number(form.cookTimeMinutes) || 0;
         setForm(f => ({ ...f, totalTimeMinutes: (prep + cook) || '' }));
     }, [form.prepTimeMinutes, form.cookTimeMinutes]);
 
-    // Revoke blob URLs on unmount to prevent memory leaks
     useEffect(() => {
         return () => {
             if (imagePreview?.startsWith('blob:')) URL.revokeObjectURL(imagePreview);
         };
     }, [imagePreview]);
 
-    // ─── Load existing recipe (edit mode) ───────────────────────────────────
     useEffect(() => {
         if (!isEditing) return;
         let alive = true;
@@ -117,7 +113,6 @@ const CreateRecipe = () => {
         return () => { alive = false; };
     }, [id, isEditing]);
 
-    // ─── Load collections (create mode only) ────────────────────────────────
     useEffect(() => {
         if (isEditing) return;
         collectionAPI.getCollections({ size: 100 })
@@ -125,7 +120,6 @@ const CreateRecipe = () => {
             .catch(() => { });
     }, [isEditing]);
 
-    // ─── Image helpers ───────────────────────────────────────────────────────
     const resetImageState = () => {
         setImagePreview(prev => {
             if (prev?.startsWith('blob:')) URL.revokeObjectURL(prev);
@@ -136,7 +130,6 @@ const CreateRecipe = () => {
         setForm(f => ({ ...f, imageUrl: '' }));
     };
 
-    // Action-based handler passed to ImageUploader — single responsibility per action
     const handleImageChange = ({ action, file, url, mode }) => {
         switch (action) {
             case 'SWITCH_MODE':
@@ -173,7 +166,6 @@ const CreateRecipe = () => {
         }
     };
 
-    // ─── Ingredient helpers ──────────────────────────────────────────────────
     const addIngredient = () => setIngredients(p => [...p, emptyIngredient()]);
 
     const updateIngredient = (key, field, val) =>
@@ -182,7 +174,6 @@ const CreateRecipe = () => {
     const removeIngredient = (key) =>
         setIngredients(p => p.map(i => i._key === key ? { ...i, _deleted: true } : i));
 
-    // ─── Step helpers ────────────────────────────────────────────────────────
     const addStep = () => setSteps(p => [...p, emptyStep()]);
 
     const updateStep = (key, val) =>
@@ -196,7 +187,6 @@ const CreateRecipe = () => {
             p.includes(colId) ? p.filter(c => c !== colId) : [...p, colId]
         );
 
-    // ─── Submit ──────────────────────────────────────────────────────────────
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -259,7 +249,6 @@ const CreateRecipe = () => {
                     );
                 }
             } else {
-                // Sync ingredients
                 const existingIngredients = ingredients.filter(i => i.id && !i._deleted);
                 const newIngredients = validIngredients.filter(i => !i.id);
                 const deletedIngredients = ingredients.filter(i => i.id && i._deleted);
@@ -282,7 +271,6 @@ const CreateRecipe = () => {
                     ),
                 ]);
 
-                // Sync steps
                 const existingSteps = steps.filter(s => s.id && !s._deleted);
                 const newSteps = validSteps.filter(s => !s.id);
                 const deletedSteps = steps.filter(s => s.id && s._deleted);

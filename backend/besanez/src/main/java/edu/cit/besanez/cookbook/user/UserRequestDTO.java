@@ -36,9 +36,7 @@ public class UserRequestDTO {
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    // Optional — URL or base64 data URL for profile image
     private String profileImage;
 
-    // Optional — defaults to BEGINNER if null
     private CookingLevel cookingLevel;
 }

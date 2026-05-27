@@ -6,15 +6,6 @@ import { publicClient } from '../api/APIClientFactory';
 
 class CookbookFacade {
 
-    // ─── Read operations ────────────────────────────────────────────────────────
-
-    /**
-     * Fetches a recipe together with its ingredients and instructions in parallel.
-     * Used by RecipeDetail (authenticated owner view) and CreateRecipe (edit mode).
-     *
-     * @param {string|number} recipeId
-     * @returns {Promise<{ recipe, ingredients, instructions }>}
-     */
     static async getRecipeDetail(recipeId) {
         const [recipeRes, ingRes, instRes] = await Promise.all([
             recipeAPI.getRecipeById(recipeId),
@@ -28,17 +19,6 @@ class CookbookFacade {
         };
     }
 
-    /**
-     * Fetches a shared recipe (by share token) together with its ingredients and
-     * instructions using the PUBLIC client — no auth token required.
-     *
-     * Used by SharedRecipePage so both guests and logged-in users can load the
-     * full recipe data. Guests see blurred ingredients/instructions in the UI;
-     * the data is fetched regardless so the blur overlay works correctly.
-     *
-     * @param {string} token — share token from the URL param
-     * @returns {Promise<{ recipe, ingredients, instructions }>}
-     */
     static async getSharedRecipeDetail(token) {
         const recipeRes = await publicClient.get(`/api/share/${token}`);
         const recipe = recipeRes.data;
@@ -54,12 +34,6 @@ class CookbookFacade {
         };
     }
 
-    /**
-     * Loads the dashboard data in parallel: recent recipes, total count,
-     * and all collections.
-     *
-     * @returns {Promise<{ recentRecipes, totalRecipes, collections, totalCollections }>}
-     */
     static async getDashboardData() {
         const [recentRes, allRes, collectionsRes] = await Promise.all([
             recipeAPI.getRecipes({ size: 3, sort: 'createdAt,desc', page: 0 }),
@@ -67,7 +41,6 @@ class CookbookFacade {
             collectionAPI.getCollections({ size: 50, sort: 'createdAt,desc', page: 0 }),
         ]);
 
-        // Support both flat { totalElements } and nested { page: { totalElements } }
         const totalRecipes = allRes.data.page?.totalElements
             ?? allRes.data.totalElements
             ?? 0;
@@ -84,18 +57,6 @@ class CookbookFacade {
         };
     }
 
-    // ─── Write operations ───────────────────────────────────────────────────────
-
-    /**
-     * Creates a recipe with its ingredients, instructions, and optional
-     * collection memberships in the correct order.
-     *
-     * @param {object}   recipePayload  — RecipeRequestDTO
-     * @param {Array}    ingredients    — validated IngredientRequestDTO[]
-     * @param {Array}    steps          — validated InstructionRequestDTO[]
-     * @param {number[]} collectionIds  — optional collection IDs to join
-     * @returns {Promise<{ recipeId, recipe }>}
-     */
     static async createRecipeWithDetails(recipePayload, ingredients, steps, collectionIds = []) {
         const recipeRes = await recipeAPI.createRecipe(recipePayload);
         const recipeId = recipeRes.data.id;
@@ -123,14 +84,6 @@ class CookbookFacade {
         return { recipeId, recipe: recipeRes.data };
     }
 
-    /**
-     * Updates a recipe's basic info and its existing ingredients/instructions.
-     *
-     * @param {string|number} recipeId
-     * @param {object} recipePayload  — RecipeRequestDTO
-     * @param {Array}  ingredients    — existing IngredientResponseDTO[] (with ids)
-     * @param {Array}  steps          — existing InstructionResponseDTO[] (with ids)
-     */
     static async updateRecipeWithDetails(recipeId, recipePayload, ingredients, steps) {
         await recipeAPI.updateRecipe(recipeId, recipePayload);
 

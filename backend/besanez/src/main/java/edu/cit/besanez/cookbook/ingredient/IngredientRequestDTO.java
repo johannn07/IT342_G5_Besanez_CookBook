@@ -23,10 +23,8 @@ public class IngredientRequestDTO {
     @Min(value = 0, message = "Quantity must be 0 or greater")
     private Integer quantity;
 
-    // Optional — some ingredients like "2 eggs" have no unit
     private IngredientUnit unit;
 
-    // Optional — e.g. "finely chopped", "room temperature"
     @Size(max = 50, message = "Notes must not exceed 50 characters")
     private String notes;
 }

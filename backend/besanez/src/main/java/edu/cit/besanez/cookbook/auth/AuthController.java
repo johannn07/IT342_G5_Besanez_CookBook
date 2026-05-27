@@ -80,12 +80,10 @@ public class AuthController {
             String verificationCode = passwordData.get("verificationCode");
             String newPassword = passwordData.get("newPassword");
 
-            // Code-based flow (forgot password) — no auth header required
             if (verificationCode != null && !verificationCode.isBlank()) {
                 String email = passwordData.get("email");
                 authService.changePasswordWithCode(email, verificationCode, newPassword);
             } else {
-                // Current-password flow — requires auth header
                 Long userId = extractUserIdFromToken(authHeader);
                 String oldPassword = passwordData.get("oldPassword");
                 authService.changePassword(userId, oldPassword, newPassword);

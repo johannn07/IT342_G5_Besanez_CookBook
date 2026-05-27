@@ -16,13 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Seeds every new user account with 3 common Filipino recipes
- * grouped into a single "Filipino Favorites" collection.
- *
- * Called once from AuthService right after the UserEntity is persisted,
- * so it always runs inside the same outer transaction.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,10 +25,6 @@ public class DefaultDataSeederService {
         private final IngredientRepository ingredientRepository;
         private final InstructionRepository instructionRepository;
         private final CollectionRepository collectionRepository;
-
-        // ─────────────────────────────────────────────────────────────────────────
-        // Public entry point
-        // ─────────────────────────────────────────────────────────────────────────
 
         @Transactional
         public void seedDefaultData(UserEntity user) {
@@ -50,10 +39,6 @@ public class DefaultDataSeederService {
                         log.error("Failed to seed default data for user {}: {}", user.getId(), ex.getMessage(), ex);
                 }
         }
-
-        // ─────────────────────────────────────────────────────────────────────────
-        // Recipe 1 — Chicken Adobo
-        // ─────────────────────────────────────────────────────────────────────────
 
         @SuppressWarnings("null")
         private RecipeEntity createChickenAdobo(UserEntity user) {
@@ -113,10 +98,6 @@ public class DefaultDataSeederService {
 
                 return recipe;
         }
-
-        // ─────────────────────────────────────────────────────────────────────────
-        // Recipe 2 — Pork Sinigang
-        // ─────────────────────────────────────────────────────────────────────────
 
         @SuppressWarnings("null")
         private RecipeEntity createPorkSinigang(UserEntity user) {
@@ -183,10 +164,6 @@ public class DefaultDataSeederService {
                 return recipe;
         }
 
-        // ─────────────────────────────────────────────────────────────────────────
-        // Recipe 3 — Lechon Kawali
-        // ─────────────────────────────────────────────────────────────────────────
-
         @SuppressWarnings("null")
         private RecipeEntity createLechonKawali(UserEntity user) {
                 @SuppressWarnings("null")
@@ -245,10 +222,6 @@ public class DefaultDataSeederService {
                 return recipe;
         }
 
-        // ─────────────────────────────────────────────────────────────────────────
-        // Collection — Filipino Favorites
-        // ─────────────────────────────────────────────────────────────────────────
-
         private void createFilipinoFavoritesCollection(UserEntity user, List<RecipeEntity> recipes) {
                 CollectionEntity collection = CollectionEntity.builder()
                                 .name("Filipino Favorites")
@@ -261,10 +234,6 @@ public class DefaultDataSeederService {
                 recipes.forEach(collection::addRecipe);
                 collectionRepository.save(collection);
         }
-
-        // ─────────────────────────────────────────────────────────────────────────
-        // Helpers
-        // ─────────────────────────────────────────────────────────────────────────
 
         private IngredientEntity ingredient(String name, int qty, IngredientUnit unit,
                         String notes, RecipeEntity recipe) {

@@ -15,7 +15,6 @@ const ForgotPassword = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Step 1 — verify the email exists (backend will 404 if not)
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -27,7 +26,6 @@ const ForgotPassword = () => {
         }
     };
 
-    // Step 2 — call /api/auth/forgot-password
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -78,7 +76,6 @@ const ForgotPassword = () => {
                 <div className={styles.cardBody}>
                     {error && <div className={styles.errorMsg}>{error}</div>}
 
-                    {/* Step 1: Email */}
                     {step === 1 && (
                         <form onSubmit={handleEmailSubmit} className={styles.form}>
                             <div className={styles.formGroup}>
@@ -99,7 +96,6 @@ const ForgotPassword = () => {
                         </form>
                     )}
 
-                    {/* Step 2: New Password */}
                     {step === 2 && (
                         <form onSubmit={handlePasswordSubmit} className={styles.form}>
                             <div className={styles.formGroup}>

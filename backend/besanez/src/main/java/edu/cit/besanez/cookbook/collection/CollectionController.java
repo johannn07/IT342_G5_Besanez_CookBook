@@ -41,15 +41,6 @@ public class CollectionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    /**
-     * GET /api/collection — all collections (paginated)
-     * GET /api/collection?search=x — filtered by name (paginated)
-     *
-     * Pagination params (all optional):
-     * ?page=0 — zero-based page number (default: 0)
-     * ?size=10 — page size (default: 10)
-     * ?sort=name,asc — sort field and direction (default: createdAt, desc)
-     */
     @GetMapping
     public ResponseEntity<Page<CollectionResponseDTO>> getAllCollections(
             HttpServletRequest request,

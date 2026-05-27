@@ -37,12 +37,7 @@ function applyErrorInterceptor(instance) {
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
 class APIClientFactory {
-    /**
-     * Creates an Axios instance of the requested type.
-     *
-     * @param {'authenticated' | 'public' | 'multipart'} type
-     * @returns {import('axios').AxiosInstance}
-     */
+
     static create(type = 'authenticated') {
         switch (type) {
             case 'authenticated': {
@@ -56,7 +51,6 @@ class APIClientFactory {
             }
 
             case 'public': {
-                // No auth or error interceptors needed for public client
                 return axios.create({
                     baseURL: API_BASE_URL,
                     headers: { 'Content-Type': 'application/json' },
@@ -64,7 +58,6 @@ class APIClientFactory {
             }
 
             case 'multipart': {
-                // Omit Content-Type so Axios sets the correct multipart boundary
                 const instance = axios.create({ baseURL: API_BASE_URL });
                 applyAuthInterceptor(instance);
                 applyErrorInterceptor(instance);
@@ -77,7 +70,6 @@ class APIClientFactory {
     }
 }
 
-// Singleton instances — created once, reused across the app
 export const authenticatedClient = APIClientFactory.create('authenticated');
 export const publicClient = APIClientFactory.create('public');
 export const multipartClient = APIClientFactory.create('multipart');

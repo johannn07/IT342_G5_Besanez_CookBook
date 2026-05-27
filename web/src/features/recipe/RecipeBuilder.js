@@ -102,13 +102,6 @@ class RecipeBuilder {
         };
     }
 
-    /**responses returned when opening the Edit Recipe screen.
-     *
-     * @param {object} recipeDTO
-     * @param {Array}  ingredients
-     * @param {Array}  steps  
-     * @returns {RecipeBuilder}
-     */
     static fromAPIResponse(recipeDTO, ingredients = [], steps = []) {
         return new RecipeBuilder()
             .withName(recipeDTO.name)
@@ -127,12 +120,6 @@ class RecipeBuilder {
         return new RecipeBuilder();
     }
 
-    /**
-     *
-     * @param {object} formState   — the `form` object from .build()
-     * @param {string|null} imageUrl — resolved image URL / base64
-     * @returns {object}  RecipeRequestDTO-compatible object
-     */
     static toRequestPayload(formState, imageUrl = null) {
         return {
             ...formState,

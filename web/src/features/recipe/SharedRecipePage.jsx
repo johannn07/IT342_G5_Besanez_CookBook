@@ -56,7 +56,6 @@ const SharedRecipePage = () => {
 
     const isOwnRecipe = user && recipe && user.userId === recipe.userId;
 
-    // ─── Loading ───────────────────────────────────────────────────────────────
     if (loading) {
         return (
             <>
@@ -70,7 +69,6 @@ const SharedRecipePage = () => {
         );
     }
 
-    // ─── Error ─────────────────────────────────────────────────────────────────
     if (error) {
         return (
             <>
@@ -89,7 +87,6 @@ const SharedRecipePage = () => {
         );
     }
 
-    // ─── Hero image support ────────────────────────────────────────────────────
     const hasImage = Boolean(recipe.imageUrl);
     const heroStyle = hasImage
         ? {
@@ -99,13 +96,11 @@ const SharedRecipePage = () => {
         }
         : {};
 
-    // ─── Main render ───────────────────────────────────────────────────────────
     return (
         <>
             <DefaultHeader user={user} />
             <div className={styles.pageWrap}>
 
-                {/* Shared-by banner */}
                 <div className={styles.sharedBanner}>
                     <span className={styles.sharedBannerIcon}>
                         <Link2 size={15} strokeWidth={2} />
@@ -113,7 +108,6 @@ const SharedRecipePage = () => {
                     <span>You're viewing a shared recipe</span>
                 </div>
 
-                {/* Hero */}
                 <div className={`${styles.hero} ${hasImage ? styles.heroWithImage : ''}`} style={heroStyle}>
                     {/* Action buttons row */}
                     <div className={styles.heroActionRow}>
@@ -170,7 +164,6 @@ const SharedRecipePage = () => {
                     </div>
                 </div>
 
-                {/* Body — always rendered; guest content is blurred via CSS */}
                 <div className={styles.body}>
                     <div className={styles.left}>
                         {ingredients.length > 0 && (
@@ -229,7 +222,6 @@ const SharedRecipePage = () => {
                     </div>
                 </div>
 
-                {/* Floating save CTA for mobile */}
                 {user && !isOwnRecipe && !savedRecipe && (
                     <div className={styles.floatingSave}>
                         <button
@@ -242,7 +234,6 @@ const SharedRecipePage = () => {
                     </div>
                 )}
 
-                {/* Save modal */}
                 {showSaveModal && (
                     <SaveRecipeModal
                         token={token}

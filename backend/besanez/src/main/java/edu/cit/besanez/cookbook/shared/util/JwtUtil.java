@@ -42,19 +42,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    /**
-     * Original validate – still used when you have both the token and the expected
-     * email
-     */
     public Boolean validateToken(String token, String email) {
         final String extractedEmail = extractEmail(token);
         return (extractedEmail.equals(email) && !isTokenExpired(token));
     }
 
-    /** New convenience overload – validates token expiration and signature */
     public boolean validateToken(String token) {
         try {
-            extractAllClaims(token); // will throw if signature invalid / expired
+            extractAllClaims(token);
             return !isTokenExpired(token);
         } catch (Exception e) {
             return false;

@@ -2,13 +2,11 @@ package edu.cit.besanez.cookbook.ingredient;
 
 public enum IngredientUnit {
 
-    // Weight
     G,
     KG,
     OZ,
     LB,
 
-    // Volume
     ML,
     L,
     TSP,
@@ -16,12 +14,10 @@ public enum IngredientUnit {
     CUP,
     FL_OZ,
 
-    // Count / other
     PIECE,
     PINCH,
     CLOVE,
     SLICE,
 
-    // Catch-all for anything not listed above
     OTHER
 }
