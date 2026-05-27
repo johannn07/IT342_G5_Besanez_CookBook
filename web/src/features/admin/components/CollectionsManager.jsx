@@ -5,6 +5,7 @@ import Pagination from './Pagination';
 import { formatRelativeTime } from '../../../shared/utils/formatRelativeTime';
 import styles from '../AdminDashboard.module.css';
 import LoadingScreen from '../../../shared/components/LoadingScreen';
+import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
 const CollectionsManager = () => {
     const [collections, setCollections] = useState([]);
@@ -13,6 +14,8 @@ const CollectionsManager = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [actionLoading, setActionLoading] = useState(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState(null);
 
     const load = async () => {
         setLoading(true);
@@ -36,12 +39,18 @@ const CollectionsManager = () => {
         load();
     }, [page]);
 
-    const handleDelete = async (id, name) => {
-        if (!window.confirm(`Delete collection "${name}"? This cannot be undone.`)) return;
-        setActionLoading(id);
+    const openDeleteDialog = (id, name) => {
+        setDeleteTarget({ id, name });
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteTarget) return;
+        setActionLoading(deleteTarget.id);
         try {
-            await adminAPI.deleteAdminCollection(id);
-            setCollections((prev) => prev.filter((c) => c.id !== id));
+            await adminAPI.deleteAdminCollection(deleteTarget.id);
+            setCollections((prev) => prev.filter((c) => c.id !== deleteTarget.id));
+            setDeleteDialogOpen(false);
         } catch {
             alert('Failed to delete collection.');
         } finally {
@@ -105,7 +114,7 @@ const CollectionsManager = () => {
                                     <td className={styles.td}>
                                         <button
                                             className={styles.btnDelete}
-                                            onClick={() => handleDelete(c.id, c.name)}
+                                            onClick={() => openDeleteDialog(c.id, c.name)}
                                             disabled={actionLoading === c.id}
                                         >
                                             {actionLoading === c.id ? (
@@ -122,6 +131,14 @@ const CollectionsManager = () => {
                     <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
                 </>
             )}
+
+            <ConfirmDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={confirmDelete}
+                title="Delete Collection?"
+                message={`Are you sure you want to delete the collection "${deleteTarget?.name}"? This action cannot be undone.`}
+            />
         </div>
     );
 };

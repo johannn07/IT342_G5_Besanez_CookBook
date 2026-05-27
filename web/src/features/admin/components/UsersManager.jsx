@@ -5,6 +5,7 @@ import Pagination from './Pagination';
 import { formatRelativeTime } from '../../../shared/utils/formatRelativeTime';
 import styles from '../AdminDashboard.module.css';
 import LoadingScreen from '../../../shared/components/LoadingScreen';
+import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
 const UsersManager = () => {
     const [users, setUsers] = useState([]);
@@ -14,6 +15,14 @@ const UsersManager = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [actionLoading, setActionLoading] = useState(null);
+
+    // Delete confirmation
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState(null);
+
+    // Role change confirmation
+    const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+    const [roleTarget, setRoleTarget] = useState(null);
 
     const load = async () => {
         setLoading(true);
@@ -42,13 +51,19 @@ const UsersManager = () => {
         setPage(0);
     }, [search]);
 
-    const handleDelete = async (userId, name) => {
-        if (!window.confirm(`Delete user "${name}"? This will also delete all their recipes and collections.`))
-            return;
-        setActionLoading(userId);
+    // Delete dialog handlers
+    const openDeleteDialog = (userId, name) => {
+        setDeleteTarget({ userId, name });
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteTarget) return;
+        setActionLoading(deleteTarget.userId);
         try {
-            await adminAPI.deleteAdminUser(userId);
-            setUsers((prev) => prev.filter((u) => u.userId !== userId));
+            await adminAPI.deleteAdminUser(deleteTarget.userId);
+            setUsers((prev) => prev.filter((u) => u.userId !== deleteTarget.userId));
+            setDeleteDialogOpen(false);
         } catch {
             alert('Failed to delete user.');
         } finally {
@@ -56,13 +71,23 @@ const UsersManager = () => {
         }
     };
 
-    const handleToggleRole = async (userId) => {
-        setActionLoading(userId);
+    // Role toggle dialog handlers
+    const openRoleDialog = (userId, name, currentRole) => {
+        setRoleTarget({ userId, name, currentRole });
+        setRoleDialogOpen(true);
+    };
+
+    const confirmRoleToggle = async () => {
+        if (!roleTarget) return;
+        setActionLoading(roleTarget.userId);
         try {
-            const res = await adminAPI.toggleUserRole(userId);
+            const res = await adminAPI.toggleUserRole(roleTarget.userId);
             setUsers((prev) =>
-                prev.map((u) => (u.userId === userId ? { ...u, ...res.data } : u))
+                prev.map((u) =>
+                    u.userId === roleTarget.userId ? { ...u, ...res.data } : u
+                )
             );
+            setRoleDialogOpen(false);
         } catch {
             alert('Failed to toggle role.');
         } finally {
@@ -142,7 +167,13 @@ const UsersManager = () => {
                                         <div className={styles.actionBtns}>
                                             <button
                                                 className={styles.btnToggleRole}
-                                                onClick={() => handleToggleRole(u.userId)}
+                                                onClick={() =>
+                                                    openRoleDialog(
+                                                        u.userId,
+                                                        `${u.firstName} ${u.lastName}`,
+                                                        u.role
+                                                    )
+                                                }
                                                 disabled={actionLoading === u.userId}
                                                 title={
                                                     u.role === 'ADMIN' ? 'Demote to User' : 'Promote to Admin'
@@ -159,7 +190,10 @@ const UsersManager = () => {
                                             <button
                                                 className={styles.btnDelete}
                                                 onClick={() =>
-                                                    handleDelete(u.userId, `${u.firstName} ${u.lastName}`)
+                                                    openDeleteDialog(
+                                                        u.userId,
+                                                        `${u.firstName} ${u.lastName}`
+                                                    )
                                                 }
                                                 disabled={actionLoading === u.userId}
                                                 title="Delete user"
@@ -179,6 +213,30 @@ const UsersManager = () => {
                     <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
                 </>
             )}
+
+            {/* Delete confirmation */}
+            <ConfirmDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={confirmDelete}
+                title="Delete User?"
+                message={`Are you sure you want to delete the user "${deleteTarget?.name}"? This will also delete all their recipes and collections.`}
+                confirmLabel="Delete"
+            />
+
+            {/* Role change confirmation */}
+            <ConfirmDialog
+                isOpen={roleDialogOpen}
+                onClose={() => setRoleDialogOpen(false)}
+                onConfirm={confirmRoleToggle}
+                title="Change User Role?"
+                message={
+                    roleTarget
+                        ? `Are you sure you want to ${roleTarget.currentRole === 'ADMIN' ? 'demote' : 'promote'} "${roleTarget.name}" to ${roleTarget.currentRole === 'ADMIN' ? 'User' : 'Admin'}?`
+                        : ''
+                }
+                confirmLabel={roleTarget?.currentRole === 'ADMIN' ? 'Demote' : 'Promote'}
+            />
         </div>
     );
 };

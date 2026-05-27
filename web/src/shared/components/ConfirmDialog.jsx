@@ -1,7 +1,7 @@
 import styles from './ConfirmDialog.module.css';
 import { X } from 'lucide-react';
 
-const ConfirmDialog = ({ isOpen, onClose, onConfirm, message, title }) => {
+const ConfirmDialog = ({ isOpen, onClose, onConfirm, message, title, confirmLabel }) => {
     if (!isOpen) return null;
 
     return (
@@ -21,7 +21,7 @@ const ConfirmDialog = ({ isOpen, onClose, onConfirm, message, title }) => {
                             Cancel
                         </button>
                         <button className={styles.btnConfirm} onClick={onConfirm}>
-                            Delete
+                            {confirmLabel || 'Delete'}
                         </button>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import Pagination from './Pagination';
 import { formatRelativeTime } from '../../../shared/utils/formatRelativeTime';
 import styles from '../AdminDashboard.module.css';
 import LoadingScreen from '../../../shared/components/LoadingScreen';
+import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
 const RecipesManager = () => {
     const [recipes, setRecipes] = useState([]);
@@ -14,6 +15,8 @@ const RecipesManager = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [actionLoading, setActionLoading] = useState(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState(null);
 
     const load = async () => {
         setLoading(true);
@@ -42,12 +45,18 @@ const RecipesManager = () => {
         setPage(0);
     }, [search]);
 
-    const handleDelete = async (id, name) => {
-        if (!window.confirm(`Delete recipe "${name}"? This cannot be undone.`)) return;
-        setActionLoading(id);
+    const openDeleteDialog = (id, name) => {
+        setDeleteTarget({ id, name });
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteTarget) return;
+        setActionLoading(deleteTarget.id);
         try {
-            await adminAPI.deleteAdminRecipe(id);
-            setRecipes((prev) => prev.filter((r) => r.id !== id));
+            await adminAPI.deleteAdminRecipe(deleteTarget.id);
+            setRecipes((prev) => prev.filter((r) => r.id !== deleteTarget.id));
+            setDeleteDialogOpen(false);
         } catch {
             alert('Failed to delete recipe.');
         } finally {
@@ -117,7 +126,7 @@ const RecipesManager = () => {
                                     <td className={styles.td}>
                                         <button
                                             className={styles.btnDelete}
-                                            onClick={() => handleDelete(r.id, r.name)}
+                                            onClick={() => openDeleteDialog(r.id, r.name)}
                                             disabled={actionLoading === r.id}
                                         >
                                             {actionLoading === r.id ? (
@@ -134,6 +143,14 @@ const RecipesManager = () => {
                     <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
                 </>
             )}
+
+            <ConfirmDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={confirmDelete}
+                title="Delete Recipe?"
+                message={`Are you sure you want to delete the recipe "${deleteTarget?.name}"? This action cannot be undone.`}
+            />
         </div>
     );
 };
