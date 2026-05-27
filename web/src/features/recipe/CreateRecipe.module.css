@@ -38,6 +38,13 @@
     gap: 20px;
 }
 
+.autoLabel {
+    font-size: 0.75rem;
+    color: #888;
+    margin-left: 4px;
+    font-weight: normal;
+}
+
 /* Form Section */
 .formSection {
     background: white;

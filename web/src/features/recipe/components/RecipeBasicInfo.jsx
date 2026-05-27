@@ -3,14 +3,7 @@ import ImageUploader from './ImageUploader';
 import { FileText } from 'lucide-react';
 
 const RecipeBasicInfo = ({ form, onChange, imageMode, imagePreview, imageFile, urlInput, uploading, onImageChange }) => {
-    const handleTimeBlur = () => {
-        const prep = Number(form.prepTimeMinutes) || 0;
-        const cook = Number(form.cookTimeMinutes) || 0;
-        const total = prep + cook;
-        if (total > 0 && !form.totalTimeMinutes) {
-            onChange({ totalTimeMinutes: total.toString() });
-        }
-    };
+    // handleTimeBlur removed – totalTimeMinutes is now computed automatically in the parent
 
     return (
         <section className={styles.formSection}>
@@ -44,12 +37,17 @@ const RecipeBasicInfo = ({ form, onChange, imageMode, imagePreview, imageFile, u
 
             <div className={styles.formRow3}>
                 {[
-                    { label: 'Prep Time (min)', field: 'prepTimeMinutes' },
-                    { label: 'Cook Time (min)', field: 'cookTimeMinutes' },
-                    { label: 'Total Time (min)', field: 'totalTimeMinutes' },
-                ].map(({ label, field }) => (
+                    { label: 'Prep Time (min)', field: 'prepTimeMinutes', disabled: false },
+                    { label: 'Cook Time (min)', field: 'cookTimeMinutes', disabled: false },
+                    { label: 'Total Time (min)', field: 'totalTimeMinutes', disabled: true },
+                ].map(({ label, field, disabled }) => (
                     <div className={styles.formGroup} key={field}>
-                        <label className={styles.formLabel}>{label}</label>
+                        <label className={styles.formLabel}>
+                            {label}
+                            {disabled && (
+                                <span className={styles.autoLabel}> (auto)</span>
+                            )}
+                        </label>
                         <input
                             className={styles.formInput}
                             type="number"
@@ -57,7 +55,7 @@ const RecipeBasicInfo = ({ form, onChange, imageMode, imagePreview, imageFile, u
                             placeholder="0"
                             value={form[field]}
                             onChange={(e) => onChange({ [field]: e.target.value })}
-                            onBlur={field !== 'totalTimeMinutes' ? handleTimeBlur : undefined}
+                            disabled={disabled}
                         />
                     </div>
                 ))}

@@ -59,6 +59,13 @@ const CreateRecipe = () => {
         imageContext.setStrategy(IMAGE_STRATEGIES[imageMode]);
     }, [imageMode, imageContext]);
 
+    // Auto-compute total time whenever prep or cook time changes
+    useEffect(() => {
+        const prep = Number(form.prepTimeMinutes) || 0;
+        const cook = Number(form.cookTimeMinutes) || 0;
+        setForm(f => ({ ...f, totalTimeMinutes: (prep + cook) || '' }));
+    }, [form.prepTimeMinutes, form.cookTimeMinutes]);
+
     // Revoke blob URLs on unmount to prevent memory leaks
     useEffect(() => {
         return () => {
