@@ -31,7 +31,7 @@ public class ShareService {
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;
 
-    private static final String FRONTEND_BASE_URL = "http://localhost:3000";
+    private static final String FRONTEND_BASE_URL = "https://cook-book-indol.vercel.app";
 
     // ─── Generate / refresh share token ──────────────────────────────────────
 
