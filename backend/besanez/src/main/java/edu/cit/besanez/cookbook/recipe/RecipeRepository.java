@@ -13,34 +13,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
-
-        // ─── Find by owner ────────────────────────────────────────────────────────
-
         Page<RecipeEntity> findByUserId(long userId, Pageable pageable);
 
         Optional<RecipeEntity> findByIdAndUserId(Long id, long userId);
-
-        // ─── Search ───────────────────────────────────────────────────────────────
 
         Page<RecipeEntity> findByUserIdAndNameContainingIgnoreCase(long userId, String name,
                         Pageable pageable);
 
         Page<RecipeEntity> findByIsPublicTrueAndNameContainingIgnoreCase(String name, Pageable pageable);
 
-        // ─── Find by share token ─────────────────────────────────────────────────
         Optional<RecipeEntity> findByShareToken(String shareToken);
 
         boolean existsByUserId(long userId);
 
-        // ─── Public recipes ───────────────────────────────────────────────────────
-
         Page<RecipeEntity> findByIsPublicTrue(Pageable pageable);
 
-        // ─── Existence checks ─────────────────────────────────────────────────────
-
         boolean existsByIdAndUserId(Long id, long userId);
-
-        // ─── Collection-scoped queries ────────────────────────────────────────────
 
         @Query("""
                         SELECT r FROM RecipeEntity r
@@ -52,11 +40,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
                         @Param("userId") long userId,
                         Pageable pageable);
 
-        // ─── Non-paginated (used internally for cascade/membership checks) ────────
-
         List<RecipeEntity> findByUserId(long userId);
-
-        // ─── Admin queries ────────────────────────────────────────────────────────
 
         Page<RecipeEntity> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
