@@ -31,7 +31,7 @@ public class ShareService {
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;
 
-    private static final String FRONTEND_BASE_URL = "https://cook-book-indol.vercel.app";
+    private static final String FRONTEND_BASE_URL = "https://cook-book-mu-flame.vercel.app";
 
     // ─── Generate / refresh share token ──────────────────────────────────────
 

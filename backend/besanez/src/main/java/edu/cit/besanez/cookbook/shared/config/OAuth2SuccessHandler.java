@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 session.invalidate();
             }
 
-            String redirectUrl = "https://cook-book-indol.vercel.app/oauth2/callback"
+            String redirectUrl = "https://cook-book-mu-flame.vercel.app//oauth2/callback"
                     + "?token=" + URLEncoder.encode(loginResponse.getToken(), StandardCharsets.UTF_8)
                     + "&userId=" + loginResponse.getUser().getUserId()
                     + "&email=" + URLEncoder.encode(loginResponse.getEmail(), StandardCharsets.UTF_8)
@@ -48,7 +48,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         } catch (Exception e) {
             System.out.println("=== OAUTH2 SUCCESS HANDLER ERROR ===");
             e.printStackTrace();
-            response.sendRedirect("https://cook-book-indol.vercel.app/?error=true");
+            response.sendRedirect("https://cook-book-mu-flame.vercel.app//?error=true");
         }
     }
 }
