@@ -1,6 +1,6 @@
 const GoogleLoginButton = () => {
     const handleGoogleLogin = () => {
-        window.location.href = "https://cook-book-mu-flame.vercel.app/oauth2/authorization/google";
+        window.location.href = "https://cookbook-besanez.onrender.com/oauth2/authorization/google";
     };
 
     return (
