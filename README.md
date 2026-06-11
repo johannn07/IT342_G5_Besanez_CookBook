@@ -275,10 +275,3 @@ All authenticated endpoints require an `Authorization: Bearer <token>` header.
 | Peach Light | `#FAE3CC` | Ghost button backgrounds, chips |
 | Peach | `#F5C9A0` | Hover on peach elements |
 | Border | `#EDD8C4` | Input borders, dividers |
-
----
-
-## Team
-
-**IT342 Group 5 — Besanez**  
-CIT University · Academic Year 2025–2026
